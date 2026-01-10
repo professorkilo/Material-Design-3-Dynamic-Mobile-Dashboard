@@ -1,0 +1,22 @@
+  - type: sections
+    max_columns: 4
+    title: Rooms
+    path: rooms
+    icon: m3o:chair
+    sections:
+.
+.
+.
+.
+.
+.
+.
+    cards: []
+    background:
+      opacity: 80
+      alignment: center
+      size: cover
+      repeat: no-repeat
+      attachment: fixed
+      image:
+        media_content_id: /local/Dark.webp
