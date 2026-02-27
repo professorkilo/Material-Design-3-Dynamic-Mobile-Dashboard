@@ -19,10 +19,6 @@ sequence:
               {{ is_state(room_boolean, 'on') and 
                  states(room_scene_tracker) != states('input_text.dynamic_scene_selected') }}
         sequence:
-          - action: scene_presets.stop_all_dynamic_scenes
-            data: {}
-          - delay:
-              milliseconds: 100
           - action: script.apply_selected_dynamic_scene_to_room
             data:
               room_lights: "{{ room_lights }}"
