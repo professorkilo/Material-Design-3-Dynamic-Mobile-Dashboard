@@ -1,14 +1,14 @@
 type: custom:mod-card
-card_mod:
+uix:
   style: |
     ha-card {
-      animation: slideInRight 1.0s cubic-bezier(0.4, 0, 0.2, 1) 1.0s both;
+      animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
     }
 
     @keyframes slideInRight {
       from {
-        opacity: 0;
-        transform: translateX(40px);
+        opacity: 1;
+        transform: translateX(8px);
       }
       to {
         opacity: 1;
@@ -18,8 +18,8 @@ card_mod:
 card:
   type: custom:simple-tabs
   pre-load: true
-  active-background: var(--md-sys-color-on-primary)
-  active-text-color: var(--md-sys-color-primary)
+  active-background: var(--md-sys-color-primary)
+  active-text-color: var(--md-sys-color-on-primary)
   text-color: var(--primary-text-color)
   tabs:
     - title: Home
@@ -72,6 +72,88 @@ card:
                       {% endif %}
                     tap_action:
                       action: more-info
+                    uix:
+                      style: |
+                        {% set hvac_mode = states('climate.heat_pump') %}
+                        ha-card {
+                          {% if hvac_mode == 'heat' %}
+                            animation: heat-flicker 1.5s ease-in-out infinite;
+                          {% elif hvac_mode == 'cool' %}
+                            animation: cool-shimmer 2s ease-in-out infinite;
+                          {% elif hvac_mode == 'fan_only' %}
+                            animation: fan-wobble 2s ease-in-out infinite;
+                          {% endif %}
+                        }
+
+                        @keyframes heat-flicker {
+                          0%, 100% { 
+                            transform: scale(1);
+                            filter: brightness(1);
+                          }
+                          25% { 
+                            transform: scale(1.02);
+                            filter: brightness(1.1);
+                          }
+                          50% { 
+                            transform: scale(1);
+                            filter: brightness(0.95);
+                          }
+                          75% { 
+                            transform: scale(1.02);
+                            filter: brightness(1.05);
+                          }
+                        }
+
+                        @keyframes cool-shimmer {
+                          0%, 100% { 
+                            transform: translateY(0px);
+                            opacity: 1;
+                          }
+                          50% { 
+                            transform: translateY(-2px);
+                            opacity: 0.9;
+                          }
+                        }
+
+                        @keyframes fan-wobble {
+                          0%, 100% { 
+                            transform: rotate(0deg) scale(1);
+                          }
+                          25% { 
+                            transform: rotate(1deg) scale(1.01);
+                          }
+                          50% { 
+                            transform: rotate(0deg) scale(1.02);
+                          }
+                          75% { 
+                            transform: rotate(-1deg) scale(1.01);
+                          }
+                        }
+
+                        mushroom-shape-icon {
+                          {% if hvac_mode == 'heat' %}
+                            animation: icon-heat-pulse 1s ease-in-out infinite !important;
+                          {% elif hvac_mode == 'cool' %}
+                            animation: icon-cool-float 3s ease-in-out infinite !important;
+                          {% elif hvac_mode == 'fan_only' %}
+                            animation: icon-fan-rotate 3s linear infinite !important;
+                          {% endif %}
+                        }
+
+                        @keyframes icon-heat-pulse {
+                          0%, 100% { transform: scale(1); }
+                          50% { transform: scale(1.15); }
+                        }
+
+                        @keyframes icon-cool-float {
+                          0%, 100% { transform: translateY(0px) rotate(0deg); }
+                          50% { transform: translateY(-3px) rotate(5deg); }
+                        }
+
+                        @keyframes icon-fan-rotate {
+                          0% { transform: rotate(0deg); }
+                          100% { transform: rotate(360deg); }
+                        }
                   - type: custom:mushroom-template-card
                     entity: sensor.outdoor_temperature
                     primary: >
@@ -206,8 +288,8 @@ card:
                             entity: input_boolean.baby_room_occupancy
                             icon: m3of:stroller
                             icon_color: >-
-                              {% if is_state(entity, 'on') %}#f385bc{% else
-                              %}var(--primary-text-color){% endif %}
+                              {% if is_state(entity, 'on') %} #f385bc  {% else
+                              %} #a8a8a8 {% endif %}
                             tap_action:
                               action: toggle
                             content: "{% if is_state(entity, 'on') %}Baby{% endif %}"
@@ -215,8 +297,8 @@ card:
                             entity: input_boolean.master_bedroom_occupancy
                             icon: m3of:bed
                             icon_color: >-
-                              {% if is_state(entity, 'on') %}#89CFF0{% else
-                              %}var(--primary-text-color){% endif %}
+                              {% if is_state(entity, 'on') %}#89CFF0 {% else %}
+                              #a8a8a8  {% endif %}
                             tap_action:
                               action: toggle
                             content: "{% if is_state(entity, 'on') %}Master{% endif %}"
@@ -224,8 +306,8 @@ card:
                             entity: input_boolean.single_guest_room_occupancy
                             icon: m3of:person-3
                             icon_color: >-
-                              {% if is_state(entity, 'on') %}#FFA500{% else
-                              %}var(--primary-text-color){% endif %}
+                              {% if is_state(entity, 'on') %} #FFA500  {% else
+                              %} #a8a8a8 {% endif %}
                             tap_action:
                               action: toggle
                             content: "{% if is_state(entity, 'on') %}Single{% endif %}"
@@ -233,8 +315,8 @@ card:
                             entity: input_boolean.multiple_guest_room_occupancy
                             icon: m3of:groups-2
                             icon_color: >-
-                              {% if is_state(entity, 'on') %}#A52A2A{% else
-                              %}var(--primary-text-color){% endif %}
+                              {% if is_state(entity, 'on') %}#A52A2A {% else %}
+                              #a8a8a8 {% endif %}
                             tap_action:
                               action: toggle
                             content: "{% if is_state(entity, 'on') %}Multiple{% endif %}"
@@ -242,8 +324,8 @@ card:
                             entity: input_boolean.play_room_occupancy
                             icon: mdi:gamepad-variant
                             icon_color: >-
-                              {% if is_state(entity, 'on') %}#9F2B68{% else
-                              %}var(--primary-text-color){% endif %}
+                              {% if is_state(entity, 'on') %}#9F2B68 {% else %}
+                              #a8a8a8  {% endif %}
                             tap_action:
                               action: toggle
                             content: "{% if is_state(entity, 'on') %}Play{% endif %}"
@@ -309,7 +391,7 @@ card:
                             icon_color: |-
                               {% if is_state(entity, 'on') %} 
                               {% else %}
-                               var(--primary-text-color)
+                               #a8a8a8
                               {% endif %}
                             tap_action:
                               action: toggle
@@ -324,7 +406,7 @@ card:
                             icon_color: |-
                               {% if is_state(entity, 'on') %} 
                               {% else %}
-                               var(--primary-text-color)
+                               #a8a8a8
                               {% endif %}
                             tap_action:
                               action: toggle
@@ -339,7 +421,7 @@ card:
                             icon_color: |-
                               {% if is_state(entity, 'on') %} 
                               {% else %}
-                               var(--primary-text-color)
+                               #a8a8a8
                               {% endif %}
                             tap_action:
                               action: toggle
@@ -354,7 +436,7 @@ card:
                             icon_color: |-
                               {% if is_state(entity, 'on') %} 
                               {% else %}
-                               var(--primary-text-color)
+                               #a8a8a8
                               {% endif %}
                             tap_action:
                               action: toggle
@@ -369,7 +451,7 @@ card:
                             icon_color: |-
                               {% if is_state(entity, 'on') %} 
                               {% else %}
-                               var(--primary-text-color)
+                               #a8a8a8
                               {% endif %}
                             tap_action:
                               action: toggle
@@ -423,7 +505,7 @@ card:
                             icon_color: |-
                               {% if is_state(entity, 'on') %} 
                               {% else %}
-                               var(--primary-text-color)
+                               #a8a8a8
                               {% endif %}
                             tap_action:
                               action: toggle
@@ -438,7 +520,7 @@ card:
                             icon_color: |-
                               {% if is_state(entity, 'on') %} 
                               {% else %}
-                               var(--primary-text-color)
+                               #a8a8a8
                               {% endif %}
                             tap_action:
                               action: toggle
@@ -452,11 +534,11 @@ card:
                         template: spacer_card
                         variables:
                           padding: 20px
-                card_mod:
+                uix:
                   style: |
                     :host {
                       --simple-swipe-card-pagination-dot-active-color: var(--md-sys-color-primary);
-                      --simple-swipe-card-pagination-dot-inactive-color: var(--md-sys-color-on-primary);
+                      --simple-swipe-card-pagination-dot-inactive-color: color-mix(in srgb, var(--md-sys-color-on-primary) 50%, transparent);
                       --simple-swipe-card-pagination-dot-size: 7px;
                     }
     - title: Events
@@ -467,7 +549,7 @@ card:
           - entities:
               - entity: calendar.christina
                 accent_color: "#ff6a6a"
-              - entity: calendar.reynaldi_sutrisno_rs16_gmail_com
+              - entity: calendar.a
                 accent_color: "#71c8fe"
               - entity: calendar.house_maintenance
                 accent_color: "#d3f37f"
@@ -515,7 +597,7 @@ card:
       icon: m3of:play-circle
       conditions:
         - template: >-
-            {{ is_state('switch.all_light_switches', 'on') or
+            {{ is_state('group.all_light_switches', 'on') or
             is_state('light.all_lights', 'on') or  is_state('group.all_fans',
             'on') or is_state('group.all_doors', 'on') or
             is_state('group.all_windows', 'on') }}
@@ -525,7 +607,7 @@ card:
           - type: custom:streamline-card
             template: entity_count_card
             variables:
-              - entity: light.all_lights
+              - entity: light.all_lights_count_only
               - title: Lights
               - icon: mdi:lightbulb-on
               - color: "#FFBF00"
@@ -541,9 +623,11 @@ card:
                   state: "on"
                   options:
                     type: custom:streamline-card
-                    template: material_light_slider_card
+                    template: light_card
                     variables:
                       entity: this.entity_id
+                      name: null
+                      icon: null
               exclude: []
             show_empty: false
             sort:
@@ -567,9 +651,10 @@ card:
                   state: "on"
                   options:
                     type: custom:streamline-card
-                    template: material_light_button_card
+                    template: button_card
                     variables:
                       entity: this.entity_id
+                      icon: m3of:switch
               exclude: []
             show_empty: false
             sort:
@@ -577,10 +662,10 @@ card:
           - type: custom:streamline-card
             template: entity_count_card
             variables:
-              - entity: group.all_doors
-              - title: Doors
-              - icon: m3of:door-open
-              - color: "#bc000a"
+              entity: group.all_doors
+              title: Doors
+              icon: m3of:door-open
+              color: "#bc000a"
           - type: custom:auto-entities
             card:
               square: false
@@ -593,12 +678,11 @@ card:
                   state: "on"
                   options:
                     type: custom:streamline-card
-                    template: material_custom_icon_with_status_button_card
+                    template: button_card
                     variables:
                       entity: this.entity_id
                       icon: m3of:door-open
-                      text_on: Open
-                      text_off: Closed
+                      background_color: rgba(188, 0, 10, 0.5)
               exclude: []
             show_empty: false
             sort:
@@ -606,10 +690,10 @@ card:
           - type: custom:streamline-card
             template: entity_count_card
             variables:
-              - entity: group.all_windows
-              - title: Windows
-              - icon: m3of:window-open
-              - color: "#ffaa00"
+              entity: group.all_windows
+              title: Windows
+              icon: m3of:window-open
+              color: "#ffaa00"
           - type: custom:auto-entities
             card:
               square: false
@@ -622,12 +706,11 @@ card:
                   state: "on"
                   options:
                     type: custom:streamline-card
-                    template: material_custom_icon_with_status_button_card
+                    template: button_card
                     variables:
                       entity: this.entity_id
                       icon: m3of:window-open
-                      text_on: Open
-                      text_off: Closed
+                      background_color: rgba(255, 170, 0, 0.5)
               exclude: []
             show_empty: false
             sort:
@@ -635,10 +718,10 @@ card:
           - type: custom:streamline-card
             template: entity_count_card
             variables:
-              - entity: group.all_fans
-              - title: Fans
-              - icon: mdi:fan
-              - color: "#ADD8E6"
+              entity: group.all_fans
+              title: Fans
+              icon: mdi:fan
+              color: "#ADD8E6"
           - type: custom:auto-entities
             card:
               square: false
@@ -651,13 +734,11 @@ card:
                   state: "on"
                   options:
                     type: custom:streamline-card
-                    template: material_custom_dual_icon_with_status_button_card
+                    template: button_card
                     variables:
                       entity: this.entity_id
-                      icon_on: mdi:fan
-                      icon_off: mdi:fan-off
-                      text_on: Running
-                      text_off: "Off"
+                      icon: mdi:fan
+                      background_color: rgba(137, 207, 240, 0.5)
               exclude: []
             show_empty: false
             sort:
@@ -681,9 +762,10 @@ card:
                   state: open
                   options:
                     type: custom:streamline-card
-                    template: curtain_card
+                    template: curtain_slider_card
                     variables:
-                      entity: this.entity_id
+                      entity_id: this.entity_id
+                      icon: mdi:curtains
             exclude: []
             show_empty: false
             sort:
