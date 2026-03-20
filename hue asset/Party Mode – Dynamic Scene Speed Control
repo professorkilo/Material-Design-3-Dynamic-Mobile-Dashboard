@@ -1,0 +1,224 @@
+alias: Party Mode – Dynamic Scene Speed Control
+description: >-
+  When Party Mode is enabled, all active room scenes restart with an ultra-fast
+  0.3-second interval. When Party Mode is disabled, the normal dynamic scene
+  interval is restored.
+triggers:
+  - entity_id: input_boolean.party_mode
+    trigger: state
+
+actions:
+  - data: {}
+    action: scene_presets.stop_all_dynamic_scenes
+
+  - delay:
+      milliseconds: 500
+
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: input_boolean.party_mode
+            state: "on"
+        sequence:
+          - if:
+              - condition: state
+                entity_id: input_boolean.wohnzimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.wohnzimmer_dynamic_scene_active') }}"
+                  interval: 0.3
+                  transition: 0
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.wohnzimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.esszimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.esszimmer_dynamic_scene_active') }}"
+                  interval: 0.3
+                  transition: 0
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.esszimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.kuche_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.kuche_dynamic_scene_active') }}"
+                  interval: 0.3
+                  transition: 0
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.kuche_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.schlafzimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.schlafzimmer_dynamic_scene_active') }}"
+                  interval: 0.3
+                  transition: 0
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.schlafzimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.hobbyzimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.hobbyzimmer_dynamic_scene_active') }}"
+                  interval: 0.3
+                  transition: 0
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.hobbyzimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.badezimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.badezimmer_dynamic_scene_active') }}"
+                  interval: 0.3
+                  transition: 0
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.badezimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.flur_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.flur_dynamic_scene_active') }}"
+                  interval: 0.3
+                  transition: 0
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.flur_lights
+                action: scene_presets.start_dynamic_scene
+
+      - conditions:
+          - condition: state
+            entity_id: input_boolean.party_mode
+            state: "off"
+        sequence:
+          - if:
+              - condition: state
+                entity_id: input_boolean.wohnzimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.wohnzimmer_dynamic_scene_active') }}"
+                  interval: "{{ states('input_number.dynamic_scene_interval') | float }}"
+                  transition: 1
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.wohnzimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.esszimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.esszimmer_dynamic_scene_active') }}"
+                  interval: "{{ states('input_number.dynamic_scene_interval') | float }}"
+                  transition: 1
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.esszimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.kuche_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.kuche_dynamic_scene_active') }}"
+                  interval: "{{ states('input_number.dynamic_scene_interval') | float }}"
+                  transition: 1
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.kuche_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.schlafzimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.schlafzimmer_dynamic_scene_active') }}"
+                  interval: "{{ states('input_number.dynamic_scene_interval') | float }}"
+                  transition: 1
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.schlafzimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.hobbyzimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.hobbyzimmer_dynamic_scene_active') }}"
+                  interval: "{{ states('input_number.dynamic_scene_interval') | float }}"
+                  transition: 1
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.hobbyzimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.badezimmer_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.badezimmer_dynamic_scene_active') }}"
+                  interval: "{{ states('input_number.dynamic_scene_interval') | float }}"
+                  transition: 1
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.badezimmer_lights
+                action: scene_presets.start_dynamic_scene
+
+          - if:
+              - condition: state
+                entity_id: input_boolean.flur_dynamic_scene
+                state: "on"
+            then:
+              - data:
+                  preset_id: "{{ states('input_text.flur_dynamic_scene_active') }}"
+                  interval: "{{ states('input_number.dynamic_scene_interval') | float }}"
+                  transition: 1
+                  brightness: "{{ states('input_number.dynamic_scene_brightness') | int }}"
+                  targets:
+                    entity_id: light.flur_lights
+                action: scene_presets.start_dynamic_scene
+
+mode: restart
