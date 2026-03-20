@@ -1,0 +1,37 @@
+alias: Stop All Dynamic Scenes (Switch)
+description: >-
+  Stops all active dynamic scenes, clears all active room scene presets,
+  disables all room scene toggles, and automatically resets the stop switch.
+mode: single
+triggers:
+  - entity_id: input_boolean.dynamic_scene_stop
+    to: "on"
+    trigger: state
+actions:
+  - action: scene_presets.stop_all_dynamic_scenes
+  - data:
+      value: ""
+    target:
+      entity_id:
+        - input_text.kuche_dynamic_scene_active
+        - input_text.wohnzimmer_dynamic_scene_active
+        - input_text.schlafzimmer_dynamic_scene_active
+        - input_text.esszimmer_dynamic_scene_active
+        - input_text.badezimmer_dynamic_scene_active
+        - input_text.hobbyzimmer_dynamic_scene_active
+        - input_text.flur_dynamic_scene_active
+    action: input_text.set_value
+  - target:
+      entity_id:
+        - input_boolean.kuche_dynamic_scene
+        - input_boolean.wohnzimmer_dynamic_scene
+        - input_boolean.schlafzimmer_dynamic_scene
+        - input_boolean.esszimmer_dynamic_scene
+        - input_boolean.badezimmer_dynamic_scene
+        - input_boolean.hobbyzimmer_dynamic_scene
+        - input_boolean.flur_dynamic_scene
+    action: homeassistant.turn_off
+  - delay: "00:00:01"
+  - target:
+      entity_id: input_boolean.dynamic_scene_stop
+    action: homeassistant.turn_off
