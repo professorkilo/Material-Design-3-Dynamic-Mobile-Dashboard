@@ -6974,6 +6974,88 @@ views:
                       entity: input_number.dynamic_scene_interval
                       name: Interval
                       icon: mdi:timer
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    icon: mdi:minus
+                    primary: – Dunkler
+                    secondary: >-
+                      {{ states('input_number.dynamic_scene_brightness') | int
+                      }}%
+                    tap_action:
+                      action: call-service
+                      service: input_number.decrement
+                      data:
+                        entity_id: input_number.dynamic_scene_brightness
+                    icon_color: '#aaaaaa'
+                    layout: vertical
+                  - type: custom:mushroom-template-card
+                    icon: mdi:plus
+                    primary: + Heller
+                    secondary: >-
+                      {{ states('input_number.dynamic_scene_brightness') | int
+                      }}%
+                    tap_action:
+                      action: call-service
+                      service: input_number.increment
+                      data:
+                        entity_id: input_number.dynamic_scene_brightness
+                    icon_color: '#fc8d59'
+                    layout: vertical
+                  - type: custom:mushroom-template-card
+                    icon: mdi:fast-forward
+                    primary: ⚡ Schneller
+                    secondary: >-
+                      {{ states('input_number.dynamic_scene_interval') | float |
+                      round(1) }}s
+                    tap_action:
+                      action: call-service
+                      service: input_number.decrement
+                      data:
+                        entity_id: input_number.dynamic_scene_interval
+                    icon_color: '#4CAF50'
+                    layout: vertical
+                  - type: custom:mushroom-template-card
+                    icon: mdi:rewind
+                    primary: 🐢 Langsamer
+                    secondary: >-
+                      {{ states('input_number.dynamic_scene_interval') | float |
+                      round(1) }}s
+                    tap_action:
+                      action: call-service
+                      service: input_number.increment
+                      data:
+                        entity_id: input_number.dynamic_scene_interval
+                    icon_color: '#aaaaaa'
+                    layout: vertical
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    icon: mdi:stop-circle
+                    primary: Scenes stoppen
+                    secondary: Stop Dynamic Scenes
+                    tap_action:
+                      action: toggle
+                    entity: input_boolean.dynamic_scene_stop
+                    color: red
+                    vertical: true
+                  - type: custom:mushroom-template-card
+                    icon: mdi:party-popper
+                    primary: >-
+                      {% if is_state('input_boolean.party_mode', 'on') %}🎉
+                      Party Mode AN{% else %}🎉 Party Mode{% endif %}
+                    secondary: >-
+                      {% if is_state('input_boolean.party_mode', 'on') %}0.3s
+                      Blitz-Wechsel aktiv!{% else %}Super schneller
+                      Farbwechsel{% endif %}
+                    tap_action:
+                      action: toggle
+                    color: grey
+                    vertical: true
+                    entity: input_boolean.party_mode
+                    icon_color: >-
+                      {% if is_state('input_boolean.party_mode', 'on')
+                      %}#ff3366{% else %}#aaaaaa{% endif %}
       - type: grid
         cards:
           - type: custom:navbar-card
